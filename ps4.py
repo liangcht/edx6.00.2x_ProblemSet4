@@ -75,10 +75,56 @@ def simulationTwoDrugsDelayedTreatment(numTrials):
     numTrials: number of simulation runs to execute (an integer)
     """
     # TODO
+    numViruses = 100
+    maxPop = 1000
+    maxBirthProb = 0.1
+    clearProb = 0.05
+    resistances = {'guttagonol': False, 'grimpex': False}
+    mutProb = 0.005
+    delays = [300, 150, 75, 0]
+ 
+    # TODO
+    for d in xrange(len(delays)) : 
+        #Showing progress
+        print "\nFor trials delayed " + str(delays[d]) + " time steps" 
+        v_populations = [0]*numTrials
+        for i in range(numTrials) :
+            #Showing progress
+            print "\rFinished {0}% of trials".format(round(float(i+1)/numTrials*100, 3)),
+            sys.stdout.flush()
+            
+            viruses = [ResistantVirus(maxBirthProb, clearProb, resistances, mutProb)]*numViruses
+            patient = TreatedPatient(viruses, maxPop)
 
-#Execution
-pylab.clf()
-simulationDelayedTreatment(1000)
+            for t in xrange(150) :
+                patient.update()
+
+            patient.addPrescription('guttagonol')
+            
+            
+            for j in xrange(delays[d]) :
+                patient.update()
+                
+            patient.addPrescription('grimpex')
+                
+            for t in xrange(149) :
+                patient.update()
+            
+            v_populations[i] = patient.update()
+
+        pylab.figure(d+1)
+        pylab.hist(v_populations, bins = 50)
+        pylab.xlabel("Final total virus population")
+        pylab.ylabel("Number of trials")
+        pylab.title("Histogram for " + str(delays[d]) + " time steps")
+
+#Execution for problem 1
+#pylab.close("all")
+#simulationDelayedTreatment(1000)
+#pylab.show()
+
+#Execution for problem 2
+pylab.close("all")
+simulationTwoDrugsDelayedTreatment(500)
 pylab.show()
-
 
