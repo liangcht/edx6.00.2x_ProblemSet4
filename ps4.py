@@ -4,6 +4,7 @@ import numpy
 import random
 import pylab
 from ps3b import *
+import sys
 
 #
 # PROBLEM 1
@@ -23,16 +24,22 @@ def simulationDelayedTreatment(numTrials):
     """
     numViruses = 100
     maxPop = 1000
-    maxBirthProb = 0.1
+    maxBirthProb = 0.5
     clearProb = 0.05
     resistances = {'guttagonol': False}
     mutProb = 0.005
-    delays = [300, 150, 75, 0]
+    delays = [150]
  
     # TODO
     for d in xrange(len(delays)) : 
+        #Showing progress
+        print "For trials delayed " + str(delays[d]) + " time steps" 
         v_populations = [0]*numTrials
         for i in range(numTrials) :
+            #Showing progress
+            print "\rFinished {0}% of trials".format(round(float(i)/numTrials*100, 3)),
+            sys.stdout.flush()
+            
             viruses = [ResistantVirus(maxBirthProb, clearProb, resistances, mutProb)]*numViruses
             patient = TreatedPatient(viruses, maxPop)
 
@@ -70,6 +77,7 @@ def simulationTwoDrugsDelayedTreatment(numTrials):
     # TODO
 
 #Execution
+pylab.clf()
 simulationDelayedTreatment(1000)
 pylab.show()
 
